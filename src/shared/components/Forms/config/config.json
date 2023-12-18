@@ -1,0 +1,157 @@
+{
+  "metadata-form": [
+    {
+      "test": {
+        "id": {
+          "type": "none"
+        },
+        "name": {
+          "type": "text",
+          "validators": ""
+        },
+        "comment": {
+          "type": "text"
+        },
+        "VehicleName": {
+          "type": "text"
+        },
+        "ProjectName": {
+          "type": "text"
+        },
+        "JobNumber": {
+          "type": "number"
+        },
+        "EmissionStandard": {
+          "type": "text"
+        },
+        "Department": {
+          "type": "text"
+        },
+        "CostCenter": {
+          "type": "number"
+        },
+        "Client": {
+          "type": "text"
+        }
+      },
+      "unitundertest": {
+        "id": {
+          "type":"text"
+        },
+        "name": {
+          "type":"text"
+        },
+        "group": {
+          "type":"text"
+        },
+        "description": {
+          "type":"text"
+        },
+        "comment": {
+          "type":"text"
+        },
+        "ao_file_children": {
+          "type":"text"
+        }
+      },
+      "testequipment": {
+        "ao_file_children": {
+          "type": "text"
+        },
+        "comment": {
+          "type": "text"
+        },
+        "description": {
+          "type": "text"
+        },
+        "id": {
+          "type": "text"
+        },
+        "name": {
+          "type": "text"
+        },
+        "serialnumber": {
+          "type": "number"
+        },
+        "type": {
+          "type": "text"
+        }
+      },
+      "measurements": {
+        "comment": {
+          "type": "text"
+        },
+        "description": {
+          "type": "text"
+        },
+        "id": {
+          "type": "text"
+        },
+        "name": {
+          "type": "text"
+        },
+        "testequipmentid": {
+          "type": "text"
+        },
+        "testid": {
+          "type": "text"
+        },
+        "unitundertestid": {
+          "type": "text"
+        }
+      },
+      "measurementquantity": {
+        "ao_file_children": {
+          "type": "text"
+        },
+        "comment": {
+          "type": "text"
+        },
+        "description": {
+          "type": "text"
+        },
+        "group": {
+          "type": "text"
+        },
+        "id": {
+          "type": "text"
+        },
+        "max": {
+          "type": "number"
+        },
+        "min": {
+          "type": "number"
+        },
+        "name": {
+          "type": "text"
+        },
+        "testequipmentid": {
+          "type": "text"
+        },
+        "unit": {
+          "type": "text"
+        },
+        "value": {
+          "type": "text"
+        }
+      },
+      "file": {
+        "comment": {
+          "type": "text"
+        },
+        "description": {
+          "type": "text"
+        },
+        "id": {
+          "type": "text"
+        },
+        "mimetype": {
+          "type": "text"
+        },
+        "name": {
+          "type": "text"
+        }
+      }
+    }
+  ]
+}
