@@ -1,21 +1,74 @@
-// import { IFormConfig } from "../../models/forms";
-import { IFormConfig } from "../../models/forms";
-import { IMetadata } from "../../models/metadata";
+import React from "react";
+import { IMetadata, IMetadataBK } from "../../models/metadata";
 import { uploadFileToBlobCall } from "../../services/azure-functions";
 import { DEFAULT_METADATA_CONFIG } from "./config/constants";
 import { v4 as uuidv4 } from "uuid";
+import { TMP_FOLDER_NAME } from "../../../utils/constants/apis";
+import { mapFromMetadataToBk } from "../../../utils/mappers/metadata";
 
-function Forms(props: IFormConfig) {
+interface IFormComunication{
+  type: string,
+  storedMetadata: (metadata: IMetadataBK) => void;
+}
+interface IFiles{
+  id: string;
+  name: string;
+  mimeType: string;
+}
+export const Forms: React.FC<IFormComunication> = ({type, storedMetadata}) => {
   let storedFormValues: IMetadata = DEFAULT_METADATA_CONFIG;
   const testId: string = uuidv4();
-  console.log(props);
+  console.log(type);//not uset yet
   
-  // const unitundertestId: string = uuidv4();
-  // const testequipmentId: string = uuidv4();
+  const unitundertestId: string = uuidv4();
+  const testequipmentId: string = uuidv4();
+  const measurementquantityId: string = uuidv4();
+  const measurementsId: string = uuidv4();
+
+  const acumOfFiles: IFiles[] = []
 
   const sendFormData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(storedFormValues);
+    storedFormValues = {
+      ...storedFormValues,
+      test: {
+        ...storedFormValues.test,
+        id: testId
+      },
+      unitundertest: {
+        ...storedFormValues.unitundertest,
+        id: unitundertestId
+      },
+      testequipment: {
+        ...storedFormValues.testequipment,
+        id: testequipmentId
+      },
+      measurements: {
+        ...storedFormValues.measurements,
+        id: measurementsId,
+        testequipmentid: [testequipmentId],
+        testid: testId,
+        unitundertestid: [unitundertestId]
+      },
+      measurementquantity: {
+        ...storedFormValues.measurementquantity,
+        id: measurementquantityId,
+        testequipmentid: testequipmentId
+      }
+    }
+    storedFormValues = {
+      ...storedFormValues,
+      file: acumOfFiles.map(files => {
+        return {
+          id: `${TMP_FOLDER_NAME}/${testId}/${files.name}`,
+          comment: `${(Object.values(storedFormValues).find((x: any) => x.id === files.id) as any).comment}`,
+          description: `${(Object.values(storedFormValues).find((x: any) => x.id === files.id) as any).description}`,
+          mimetype: files.mimeType,
+          name: files.name
+        }
+      })
+    }
+    storedMetadata(mapFromMetadataToBk(storedFormValues));
   };
 
   const storedValue = (
@@ -69,8 +122,39 @@ function Forms(props: IFormConfig) {
         break;
     }
   };
-  const uploadBlobStorage = async (e: FileList) => {
-    await uploadFileToBlobCall(testId, e[0]);
+  const uploadBlobStorage = async (e: FileList, typeVal: string, val: string) => {
+    await uploadFileToBlobCall(testId, e[0]).then(_ => {
+      storedValue(e[0].name, typeVal, val);
+      switch (typeVal) {
+        case 'measurementquantity':
+          acumOfFiles.push({
+            id: measurementquantityId,
+            name: e[0].name,
+            mimeType: e[0].type
+          })
+          break;
+        case 'unitundertest':
+          acumOfFiles.push({
+            id: unitundertestId,
+            name: e[0].name,
+            mimeType: e[0].type
+          })
+          break;
+        case 'testequipment':
+          acumOfFiles.push({
+            id: testequipmentId,
+            name: e[0].name,
+            mimeType: e[0].type
+          })
+          break;
+        default:
+          break;
+      }
+
+      
+    }).catch(err => {
+      console.error(err);      
+    });
   };
   const clearFormValues = () => {
     storedFormValues = DEFAULT_METADATA_CONFIG;
@@ -92,7 +176,6 @@ function Forms(props: IFormConfig) {
                   onChange={(e) => storedValue(e.target.value, "test", "name")}
                 />
               </div>
-              {/*primera*/}
               <div>Description</div>
               <div>
                 <input
@@ -122,7 +205,7 @@ function Forms(props: IFormConfig) {
                   id="f_vehiclename"
                   placeholder="Vehicle Name"
                   onChange={(e) =>
-                    storedValue(e.target.value, "test", "VehicleName")
+                    storedValue(e.target.value, "test", "vehicleName")
                   }
                 />
               </div>
@@ -133,7 +216,7 @@ function Forms(props: IFormConfig) {
                   id="f_projectname"
                   placeholder="Project Name"
                   onChange={(e) =>
-                    storedValue(e.target.value, "test", "ProjectName")
+                    storedValue(e.target.value, "test", "projectName")
                   }
                 />
               </div>
@@ -144,7 +227,7 @@ function Forms(props: IFormConfig) {
                   id="f_jobnumber"
                   placeholder="1000000"
                   onChange={(e) =>
-                    storedValue(e.target.value, "test", "JobNumber")
+                    storedValue(e.target.value, "test", "jobNumber")
                   }
                   inputMode="numeric"
                   pattern="\d*"
@@ -157,7 +240,7 @@ function Forms(props: IFormConfig) {
                   id="f_emissionstandard"
                   placeholder="Emission Standard"
                   onChange={(e) =>
-                    storedValue(e.target.value, "test", "EmissionStandard")
+                    storedValue(e.target.value, "test", "emissionStandard")
                   }
                 />
               </div>
@@ -168,7 +251,7 @@ function Forms(props: IFormConfig) {
                   id="f_department"
                   placeholder="Department"
                   onChange={(e) =>
-                    storedValue(e.target.value, "test", "Department")
+                    storedValue(e.target.value, "test", "department")
                   }
                 />
               </div>
@@ -179,7 +262,7 @@ function Forms(props: IFormConfig) {
                   id="f_costcenter"
                   placeholder="Cost Center"
                   onChange={(e) =>
-                    storedValue(e.target.value, "test", "CostCenter")
+                    storedValue(e.target.value, "test", "costCenter")
                   }
                 />
               </div>
@@ -190,7 +273,7 @@ function Forms(props: IFormConfig) {
                   id="f_client"
                   placeholder="Client"
                   onChange={(e) =>
-                    storedValue(e.target.value, "test", "Client")
+                    storedValue(e.target.value, "test", "client")
                   }
                 />
               </div>
@@ -256,7 +339,7 @@ function Forms(props: IFormConfig) {
                   id="f_ao_file_children"
                   placeholder="Children File"
                   onChange={(e) =>
-                    uploadBlobStorage(e.target.files as FileList)
+                    uploadBlobStorage(e.target.files as FileList, 'unitundertest', 'ao_file_children')
                   }
                 />
               </div>
@@ -333,7 +416,7 @@ function Forms(props: IFormConfig) {
                   id="f_ao_file_children"
                   placeholder="Children File"
                   onChange={(e) =>
-                    uploadBlobStorage(e.target.files as FileList)
+                    uploadBlobStorage(e.target.files as FileList, 'testequipment', 'ao_file_children')
                   }
                 />
               </div>
@@ -439,7 +522,7 @@ function Forms(props: IFormConfig) {
                   id="f_ao_file_children"
                   placeholder="Children File"
                   onChange={(e) =>
-                    uploadBlobStorage(e.target.files as FileList)
+                    uploadBlobStorage(e.target.files as FileList, 'measurementquantity', 'ao_file_children')
                   }
                 />
               </div>
@@ -501,7 +584,7 @@ function Forms(props: IFormConfig) {
                   type="text"
                   id="f_value"
                   placeholder="Value"
-                  onChange={(e) => storedValue(e.target.value, "test", "value")}
+                  onChange={(e) => storedValue(e.target.value, "measurementquantity", "value")}
                 />
               </div>
             </div>
@@ -529,4 +612,3 @@ function Forms(props: IFormConfig) {
     </>
   );
 }
-export default Forms;

@@ -1,19 +1,85 @@
+import { mapFromMetadataToBk } from "../../../utils/mappers/metadata";
+import { IMetadata } from "../../models/metadata";
 import { excelExport } from "../../services/excel";
 import { HEADER_TABLES } from "./config/config";
+interface ITableComunication {
+  type: string;
+  dataTable: IMetadata[];
+  subType: string;
+}
 
-export const Table = () => {
+export const Table: React.FC<ITableComunication> = ({ type, subType, dataTable }) => {
+  const headers = (): any[] => {
+    let fHeader: string[] = [];
+    switch (type) {
+      case "search": //cambiar por enumerable
+        fHeader = HEADER_TABLES;
+        break;
+      //para mas cabeceras
+      default:
+        break;
+    }
+    return fHeader;
+  };
+  const exportToExcelSheet = () => {
+    switch (subType) {
+      case 'metadata':
+        return excelExport(dataTable.map(e => mapFromMetadataToBk(e)), subType);
+      default:
+        break;
+    }
+  }
   return (
     <>
-      <table id="f-metadata-tab" className="table-fixed w-full mb-4 mt-4">
-        <thead id="f-metadata-tab-hd">
+      <table
+        id="f-metadata-tab"
+        className="mb-5 mt-7 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 "
+          id="f-metadata-tab-hd"
+        >
           <tr id="f-metadata-tab-tr">
-            {HEADER_TABLES.map((data) => {
-              return <th id={data} className="w-1/11">{data}</th>;
+            {headers().map((data) => {
+              return (
+                <th id={data} className="w-1/11">
+                  {data}
+                </th>
+              );
             })}
           </tr>
         </thead>
         <tbody id="f-metadata-tab-bd">
-          <tr id="f-metadata-tab-tr-bd"></tr>
+          {dataTable.length <= 0 ? (
+            <tr>
+              <td>No content for this search</td>
+            </tr>
+          ) : (
+            dataTable.map((dt) => {
+              return (
+                <tr
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  id="f-metadata-tab-tr-bd"
+                >
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {dt.test.name}
+                  </th>
+                  <td className="px-6">{dt.test.comment}</td>
+                  <td className="px-6">{dt.test.description}</td>
+                  <td className="px-6">{dt.test.client}</td>
+                  <td className="px-6">{dt.test.costCenter}</td>
+                  <td className="px-6">{dt.test.department}</td>
+                  <td className="px-6">{dt.test.emissionStandard}</td>
+                  <td className="px-6">{dt.test.jobNumber}</td>
+                  <td className="px-6">{dt.test.projectName}</td>
+                  <td className="px-6">{dt.test.vehicleName}</td>
+                </tr>
+              );
+            })
+          )}
         </tbody>
       </table>
       <div className="flex justify-between">
@@ -92,7 +158,7 @@ export const Table = () => {
           <button
             className="text-white font-bold py-2 px-4 border border-blue-700 rounded"
             type="button"
-            onClick={excelExport}
+            onClick={exportToExcelSheet}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -108,5 +174,4 @@ export const Table = () => {
       </div>
     </>
   );
-}
-
+};

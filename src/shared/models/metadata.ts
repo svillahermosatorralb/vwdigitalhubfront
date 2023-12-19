@@ -4,20 +4,28 @@ export type IMetadata = {
   testequipment: ITestEquipment;
   measurements: IMeasurement;
   measurementquantity: IMeasurementQuantity;
-  file: IFileObj;
+  file: IFileObj[];
+}
+export type IMetadataBK = {
+  test: ITestObj;
+  unitundertest: IUnderTest[];
+  testequipment: ITestEquipmentBK[];
+  measurements: IMeasurement;
+  measurementquantity: IMeasurementQuantity[];
+  file: IFileObj[];
 }
 export interface ITestObj {
   id: string; //uuid
   name: string;
   comment: string;
   description: string;
-  VehicleName: string;
-  ProjectName: string;
-  JobNumber: number;
-  EmissionStandard: string;
-  Department: string;
-  CostCenter: number;
-  Client: string;
+  vehicleName: string;
+  projectName: string;
+  jobNumber: number;
+  emissionStandard: string;
+  department: string;
+  costCenter: number;
+  client: string;
   
 }
 export interface IUnderTest {
@@ -26,7 +34,7 @@ export interface IUnderTest {
   group: string;
   description: string;
   comment: string;
-  ao_file_children: string; // nombre del archivo subido aqui!
+  ao_file_children: string;
 }
 export interface ITestEquipment {
   id: string;
@@ -35,23 +43,32 @@ export interface ITestEquipment {
   name: string;
   serialnumber: string;
   type: string; //no se si son fijos o es un enumerable hay que preguntar
-  ao_file_children: string; // nombre del archivo subido aqui!
+  ao_file_children: string;
+}
+export interface ITestEquipmentBK {
+  id: string;
+  comment: string;
+  description: string;
+  name: string;
+  serialnumber: string;
+  type: string; //no se si son fijos o es un enumerable hay que preguntar
+  ao_file_children: string[];
 }
 export interface IMeasurement {
   id: string;
   name: string;
   comment: string;
   description: string;
-  testequipmentid: string;
+  testequipmentid: string[];
   testid: string; //uuid anteriormente creado para la session!
-  unitundertestid: string;
+  unitundertestid: string[];
 }
 export interface IMeasurementQuantity {
   id: string;
   name: string;
   description: string;
   comment: string;
-  ao_file_children: string; // nombre del archivo subido aqui!
+  ao_file_children: string;
   group: string;
   max: number;
   min: number;

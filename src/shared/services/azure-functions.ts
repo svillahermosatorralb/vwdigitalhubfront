@@ -7,6 +7,7 @@ import {
   SASS_URL_BLOB_ACCOUNT,
   SEARCH_BASE_URL,
   SEARCH_INDEX_COSMOS,
+  TMP_FOLDER_NAME,
 } from "../../utils/constants/apis";
 
 export const searchAiCall = (searchBy: string): Promise<any> => {
@@ -25,7 +26,7 @@ export const uploadFileToBlobCall = async (
   const containerClient =
     blobServiceClientStore().getContainerClient(BASE_CONTAINER_BLOB);
   const blockBlobClient = containerClient.getBlockBlobClient(
-    `${containerName}/${file.name}`
+    `${TMP_FOLDER_NAME}/${containerName}/${file.name}`
   );
   try {
     await blockBlobClient.uploadData(file);

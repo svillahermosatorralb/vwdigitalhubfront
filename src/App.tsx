@@ -1,14 +1,42 @@
 import { useState } from "react";
-import "./App.css";
+import { useTranslation } from "react-i18next";
+
 import { Search } from "./shared/components/Search/Search";
 import { Table } from "./shared/components/Table/Table";
-import { useTranslation } from "react-i18next";
-import Forms from "./shared/components/Forms/Forms";
+import { Forms } from "./shared/components/Forms/Forms";
+import { searchAiCall } from "./shared/services/azure-functions";
+import { IMetadata, IMetadataBK } from "./shared/models/metadata";
+import "./App.css";
+import { storeMetadataCall } from "./shared/services/metadata";
 
-function App() {
+export const App: React.FC = () => {
   const [t, i18n] = useTranslation("global");
   const [showModal, setShowModal] = useState(false);
-  const [tableDataExported] = useState([]);
+  const [searchBy] = useState("");
+  const [tableData, setTableData] = useState<IMetadata[]>([]);
+
+  const storeTableData = async (searchBy: string) => {
+    const searchBy_ = await searchAiCall(searchBy);
+    let tmpObj = [];
+    for await (const result of searchBy_.results) {
+      tmpObj.push({
+        test: result.document.test,
+        testequipment: result.document.testequipment,
+        unitundertest: result.document.unitundertest,
+        measurementquantity: result.document.measurementquantity,
+        measurements: result.document.measurements,
+        file: result.document.file,
+      });
+    }
+    setTableData(tmpObj);
+  };
+  const storeMetadataToBack = async (metadata: IMetadataBK) => {
+    await storeMetadataCall(metadata).then(res => {
+      if(res.length > 0){
+
+      }
+    });
+  }
 
   return (
     <>
@@ -22,9 +50,7 @@ function App() {
         <div className="body">
           <div className="flex mt-6">
             <div className="w-3/4">
-              <Search 
-                // tableData={tableDataExported} 
-              />
+              <Search storeSearchBy={storeTableData} searchBy={searchBy} />
             </div>
             <div className="w-1/4">
               <input
@@ -36,7 +62,7 @@ function App() {
             </div>
           </div>
           <div className="mt-6 mb-6">
-            <Table />
+            <Table type="search" subType="metadata" dataTable={tableData} />
           </div>
           {showModal ? (
             <>
@@ -73,7 +99,7 @@ function App() {
                       </div>
                       <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                         <div className="sm:flex sm:items-start">
-                          <Forms type="metadata" />
+                          <Forms type="metadata" storedMetadata={storeMetadataToBack} />
                         </div>
                       </div>
                     </div>
@@ -85,11 +111,9 @@ function App() {
             <></>
           )}
         </div>
-        <pre>{tableDataExported}</pre>
+
         <footer>@ Deloitte STE</footer>
       </div>
     </>
   );
-}
-
-export default App;
+};

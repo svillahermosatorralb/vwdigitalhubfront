@@ -1,25 +1,14 @@
-import { useState } from "react";
-// import { searchAzure } from "../../services/azure-functions";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { searchAiCall } from "../../services/azure-functions";
 
-export const Search = () => {
-  const [searchBy, setSearchBy] = useState("");
+interface ISeachComunication{
+  searchBy: string;
+  storeSearchBy: (searchBy: string) => void
+}
 
-  const searchByQuery = async () => {
-    const searchBy_ = await searchAiCall(searchBy);
-    let tmpObj = [];
-    for await (const result of searchBy_.results) {
-      tmpObj.push({        
-        test: result.document.test,
-        testequipment: result.document.testequipment,
-        unitundertest: result.document.unitundertest,
-        measurementquantity: result.document.measurementquantity,
-        measurements: result.document.measurements,
-        file: result.document.file,
-      }) 
-    }
-    // tableData = tmpObj;
+export const Search: React.FC<ISeachComunication> = ({searchBy, storeSearchBy}) => {
+  const searchByQuery = () => {
+    storeSearchBy(searchBy);
   };
   const [t] = useTranslation("global");
   return (
@@ -32,10 +21,10 @@ export const Search = () => {
               className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
               type="text"
               placeholder={t("main.search.scope")}
-              onChange={(e) => setSearchBy(e.target.value)}
+              onChange={(e) => searchBy = e.target.value}
             />
             <button
-              className="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
+              className="bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
               type="button"
               onClick={searchByQuery}
             >
