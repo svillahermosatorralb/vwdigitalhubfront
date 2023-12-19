@@ -32,8 +32,8 @@ export const App: React.FC = () => {
   };
   const storeMetadataToBack = async (metadata: IMetadataBK) => {
     await storeMetadataCall(metadata).then(res => {
-      if(res.length > 0){
-
+      if(res.status === 201){
+        setShowModal(false);
       }
     });
   }

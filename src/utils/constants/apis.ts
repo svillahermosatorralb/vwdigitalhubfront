@@ -1,5 +1,5 @@
 //search ai
-export const SEARCH_INDEX_COSMOS = "cosmosdb-index-all-searchable";
+export const SEARCH_INDEX_COSMOS = "cosmosdb-index-skill";
 export const KEY_QUERY_INDEX =
   "kz5GZCMRMNsjPJEv2RjVzI3e4CKqNYrMpbUmThxednAzSeDQUzrp";
 export const SEARCH_BASE_URL = "https://azais-eun-poc-vwgs.search.windows.net/";
