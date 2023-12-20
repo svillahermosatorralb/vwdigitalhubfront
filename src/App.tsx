@@ -14,10 +14,11 @@ import { Header } from "./shared/components/Header/Header";
 
 export const App: React.FC = () => {
   const [t] = useTranslation("global");
-  const [showModal, setShowModal] = useState(false);
+  const [showFormModal, setShowFormModal] = useState(false);
   const [searchBy] = useState("");
   const [captureEvent, setCaptureEvent] = useState("");
   const [tableData, setTableData] = useState<IMetadata[]>([]);
+  const [showAnalitics, setShowAnalitics] = useState(false);
 
   const storeTableData = async (searchBy: string) => {
     const searchBy_ = await searchAiCall(searchBy);
@@ -37,7 +38,7 @@ export const App: React.FC = () => {
   const storeMetadataToBack = async (metadata: IMetadataBK) => {
     await storeMetadataCall(metadata).then((res) => {
       if (res.status === 201) {
-        setShowModal(false);
+        setShowFormModal(false);
       }
     });
   };
@@ -48,15 +49,21 @@ export const App: React.FC = () => {
         <Header />
         <div className="body">
           <div className="container flex flex-row flex-wrap justify-between items-end mt-6">
-            <div>
+            <div style={{width: "100vh"}}>
               <Search storeSearchBy={storeTableData} searchBy={searchBy} />
             </div>
             <div>
               <input
-                onClick={() => setShowModal(true)}
+                onClick={() => setShowFormModal(true)}
                 className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
                 type="button"
                 value={t("main.form")}
+              />
+              <input
+                onClick={() => setShowAnalitics(true)}
+                className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+                type="button"
+                value={t("main.analitics")}
               />
             </div>
           </div>
@@ -68,14 +75,14 @@ export const App: React.FC = () => {
               emitAction={setCaptureEvent}
             />
           </div>
-          {showModal ? (
+          {showFormModal ? (
             <>
               <Modal
                 childrenComponent={
                   <Forms type="metadata" storedMetadata={storeMetadataToBack} />
                 }
                 emitClose={() => {
-                  setShowModal(false);
+                  setShowFormModal(false);
                 }}
               ></Modal>
             </>
@@ -83,9 +90,33 @@ export const App: React.FC = () => {
             <></>
           )}
           {captureEvent !== "" ? (
-            <>{/**temporalmente solo mostrara el modal, luego se implementara para actualizar y borrar */}
+            <>
+              {/**temporalmente solo mostrara el modal, luego se implementara para actualizar y borrar */}
               <Modal
                 childrenComponent={<MainChart />}
+                emitClose={() => {
+                  setCaptureEvent("");
+                }}
+              ></Modal>
+            </>
+          ) : (
+            <></>
+          )}
+          {showAnalitics ? (
+            <>
+              {/**temporalmente solo mostrara el modal, luego se implementara para actualizar y borrar */}
+              <Modal
+                childrenComponent={
+                  <div>
+                    <iframe
+                      title="analytics"
+                      width="1140"
+                      height="541.25"
+                      className="w-full"
+                      src="https://app.powerbi.com/reportEmbed?reportId=5e9c6dfe-d4c3-4dd4-8e4c-393927ca0736&autoAuth=true&ctid=36da45f1-dd2c-4d1f-af13-5abe46b99921"
+                    ></iframe>
+                  </div>
+                }
                 emitClose={() => {
                   setCaptureEvent("");
                 }}

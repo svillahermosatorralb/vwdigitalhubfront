@@ -590,7 +590,7 @@ export const Forms: React.FC<IFormComunication> = ({type, storedMetadata}) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-center flex-wrap gap-4">
+        <div className="mt-5 flex justify-center flex-wrap gap-4">
           <div>
             <button
               type="reset"
