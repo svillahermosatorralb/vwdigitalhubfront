@@ -2,10 +2,12 @@ import React from "react";
 
 interface IModalComunication {
   childrenComponent: any;
+  removeLimitSize?: boolean;
   emitClose: (isClosed: boolean) => void;
 }
 export const Modal: React.FC<IModalComunication> = ({
   childrenComponent,
+  removeLimitSize,
   emitClose,
 }) => {
   return (
@@ -39,9 +41,13 @@ export const Modal: React.FC<IModalComunication> = ({
                 </button>
               </div>
               <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                <div className="sm:flex sm:items-start">
-                  {childrenComponent}
-                </div>
+                {removeLimitSize ? (
+                  <div>{childrenComponent}</div>
+                ) : (
+                  <div className="sm:flex sm:items-start">
+                    {childrenComponent}
+                  </div>
+                )}
               </div>
             </div>
           </div>

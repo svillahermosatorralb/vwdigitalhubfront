@@ -49,7 +49,7 @@ export const App: React.FC = () => {
         <Header />
         <div className="body">
           <div className="container flex flex-row flex-wrap justify-between items-end mt-6">
-            <div style={{width: "100vh"}}>
+            <div >
               <Search storeSearchBy={storeTableData} searchBy={searchBy} />
             </div>
             <div>
@@ -117,8 +117,9 @@ export const App: React.FC = () => {
                     ></iframe>
                   </div>
                 }
+                removeLimitSize={true}
                 emitClose={() => {
-                  setCaptureEvent("");
+                  setShowAnalitics(false);
                 }}
               ></Modal>
             </>
