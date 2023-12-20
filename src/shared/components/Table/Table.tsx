@@ -6,9 +6,15 @@ interface ITableComunication {
   type: string;
   dataTable: IMetadata[];
   subType: string;
+  emitAction: (type: string) => void;
 }
 
-export const Table: React.FC<ITableComunication> = ({ type, subType, dataTable }) => {
+export const Table: React.FC<ITableComunication> = ({
+  type,
+  subType,
+  dataTable,
+  emitAction,
+}) => {
   const headers = (): any[] => {
     let fHeader: string[] = [];
     switch (type) {
@@ -23,12 +29,15 @@ export const Table: React.FC<ITableComunication> = ({ type, subType, dataTable }
   };
   const exportToExcelSheet = () => {
     switch (subType) {
-      case 'metadata':
-        return excelExport(dataTable.map(e => mapFromMetadataToBk(e)), subType);
+      case "metadata":
+        return excelExport(
+          dataTable.map((e) => mapFromMetadataToBk(e)),
+          subType
+        );
       default:
         break;
     }
-  }
+  };
   return (
     <>
       <table
@@ -76,6 +85,30 @@ export const Table: React.FC<ITableComunication> = ({ type, subType, dataTable }
                   <td className="px-6">{dt.test.jobNumber}</td>
                   <td className="px-6">{dt.test.projectName}</td>
                   <td className="px-6">{dt.test.vehicleName}</td>
+                  <td className="px-6">
+                    <button onClick={() => emitAction("charts")}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        data-slot="icon"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z"
+                        />
+                      </svg>
+                    </button>
+                  </td>
                 </tr>
               );
             })

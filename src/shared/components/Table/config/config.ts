@@ -9,4 +9,5 @@ export const HEADER_TABLES = [
   "Job Number",
   "Project Name",
   "Vehicle Name",
+  "Actions"
 ];
