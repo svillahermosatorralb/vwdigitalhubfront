@@ -14,7 +14,7 @@ export const Search: React.FC<ISeachComunication> = ({searchBy, storeSearchBy}) 
   return (
     <>
       <div className="w-full">
-        <form className="max-w-sm">
+        <form className="max-w-max">
           <div className="flex items-center border-b border-teal-500 py-2">
             <input
               id="searchBy"
