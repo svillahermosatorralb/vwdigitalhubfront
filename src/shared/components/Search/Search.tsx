@@ -1,12 +1,15 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-interface ISeachComunication{
+interface ISeachComunication {
   searchBy: string;
-  storeSearchBy: (searchBy: string) => void
+  storeSearchBy: (searchBy: string) => void;
 }
 
-export const Search: React.FC<ISeachComunication> = ({searchBy, storeSearchBy}) => {
+export const Search: React.FC<ISeachComunication> = ({
+  searchBy,
+  storeSearchBy,
+}) => {
   const searchByQuery = () => {
     storeSearchBy(searchBy);
   };
@@ -15,13 +18,22 @@ export const Search: React.FC<ISeachComunication> = ({searchBy, storeSearchBy}) 
     <>
       <div className="w-full">
         <form className="max-w-max">
-          <div style={{width: "100vh"}} className="flex items-center border-b border-teal-500 py-2">
+          <div
+            style={{ width: "100vh" }}
+            className="flex items-center border-b border-teal-500 py-2"
+          >
             <input
               id="searchBy"
               className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
               type="text"
               placeholder={t("main.search.scope")}
-              onChange={(e) => searchBy = e.target.value}
+              onChange={(e) => (searchBy = e.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  searchByQuery();
+                }
+              }}
             />
             <button
               className="bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
